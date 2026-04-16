@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinoPac Foodie - Tainan Food Itinerary</title>
+    <style>
+        :root {
+            --dawho-bg: #1a1a1a;       /* SinoPac Dark */
+            --dawho-gold: #c5a065;     /* SinoPac Gold */
+            --primary-green: #008f4c;  /* SinoPac Green */
+            --bg-light: #f5f5f5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+
+        body { background-color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+        /* iPhone Frame */
+        .iphone-frame {
+            width: 375px; height: 812px; background: var(--bg-light);
+            border-radius: 40px; border: 8px solid #000;
+            position: relative; overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* App Header */
+        .app-header {
+            background: #fff; padding: 50px 20px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        .logo { font-size: 18px; font-weight: 800; color: #1a1a1a; }
+        .logo span { color: var(--primary-green); }
+
+        /* Accommodation Button */
+        .user-badge {
+            background: var(--dawho-gold); color: white; padding: 6px 12px;
+            border-radius: 20px; font-size: 11px; font-weight: bold;
+            cursor: pointer; border: none; transition: transform 0.1s;
+        }
+        .user-badge:active { transform: scale(0.95); }
+
+        .content-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        .content-area::-webkit-scrollbar { display: none; }
+
+        /* Dashboard */
+        .ctl-dashboard {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            border-radius: 20px; padding: 20px; color: white; margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .ctl-title { font-size: 11px; color: #aaa; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
+        .ctl-value { font-size: 48px; font-weight: 700; color: var(--primary-green); transition: color 0.3s; }
+        .ctl-unit { font-size: 14px; color: #aaa; margin-left: 5px; }
+
+        /* Progress Bar */
+        .progress-container { background: #444; height: 8px; border-radius: 4px; margin-top: 15px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; background: var(--primary-green);
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 50%;
+        }
+
+        /* Task Cards */
+        .task-card {
+            background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); cursor: pointer;
+            border: 1.5px solid transparent; transition: all 0.2s;
+        }
+        .task-card:active { transform: scale(0.97); }
+        .task-card.low-stomach { border-color: #ff4d4f; opacity: 0.8; background: #fff0f0; }
+
+        .icon-box { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: #f0f0f0; flex-shrink: 0; }
+        .task-info { flex: 1; min-width: 0; }
+        .task-name { font-weight: 700; font-size: 15px; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .task-meta { font-size: 12px; color: #888; margin-top: 2px; }
+        .map-link { color: var(--primary-green); font-size: 11px; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 5px; }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: absolute; bottom: 0; width: 100%; height: 85px;
+            background: white; border-top: 1px solid #eee;
+            display: flex; justify-content: space-around; padding-top: 10px; z-index: 100;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #ccc; cursor: pointer; transition: color 0.3s; }
+        .nav-item.active { color: var(--primary-green); }
+        .nav-icon { font-size: 22px; margin-bottom: 2px; }
+
+        /* Dialogue Box */
+        #dialogue-box { background: #fff5e6; border-left: 4px solid var(--dawho-gold); padding: 12px; border-radius: 8px; font-size: 13px; margin: 15px 0; display: none; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Kiss Overlay */
+        #kiss-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(233, 30, 99, 0.95); display: none;
+            flex-direction: column; justify-content: center; align-items: center; color: white; z-index: 1000;
+        }
+        .kiss-count { font-size: 80px; font-weight: 900; animation: heartBeat 0.5s infinite alternate; }
+        @keyframes heartBeat { from {transform: scale(1);} to {transform: scale(1.1);} }
+
+        /* Hotel Overlay */
+        #hotel-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: none;
+            flex-direction: column; justify-content: flex-end; z-index: 2000;
+        }
+        .hotel-modal {
+            background: #fff; border-radius: 25px 25px 0 0; padding: 25px;
+            height: 70%; overflow-y: auto; position: relative;
+            animation: slideUp 0.35s ease-out;
+        }
+        @keyframes slideUp { from {transform: translateY(100%);} to {transform: translateY(0);}}
+        .hotel-card { border: 1px solid #eee; border-left: 5px solid var(--dawho-gold); padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #fafafa; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #ccc; cursor: pointer; }
+
+        .action-btn { flex: 1; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="iphone-frame">
+        <div class="app-header">
+            <div class="logo">SinoPac <span>Foodie</span></div>
+            <button class="user-badge" onclick="showHotel()">CINDY🍰 & MELON🍈 🏠</button>
+        </div>
+
+        <div class="content-area">
+            <div class="ctl-dashboard">
+                <div class="ctl-title">CINDY's Current Fullness Level</div>
+                <div style="display:flex; align-items:baseline;">
+                    <div id="stomach-val" class="ctl-value">50</div>
+                    <div class="ctl-unit">%</div>
+                </div>
+                <div class="progress-container">
+                    <div id="stomach-bar" class="progress-fill"></div>
+                </div>
+                <div id="status-tag" style="margin-top:10px; font-size:11px; color: #4ade80;">✅ Good to go, let's eat!</div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <button onclick="triggerKiss()" class="action-btn" style="background: #ff4d4f; color:white;">💋 Recharge Magic</button>
+                <button onclick="flirt()" class="action-btn" style="background: var(--dawho-gold); color:white;">💖 Flirt a little</button>
+            </div>
+
+            <div id="dialogue-box"></div>
+            <div id="day-title" style="font-weight:bold; margin-bottom:15px; font-size:16px; color: #333;">Today's Itinerary</div>
+            <div id="mission-list"></div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchDay('Day 1', this)"><div class="nav-icon">❶</div><span>Day 1</span></div>
+            <div class="nav-item" onclick="switchDay('Day 2', this)"><div class="nav-icon">❷</div><span>Day 2</span></div>
+            <div class="nav-item" onclick="switchDay('Day 3', this)"><div class="nav-icon">❸</div><span>Day 3</span></div>
+            <div class="nav-item" onclick="switchDay('All Spots', this)"><div class="nav-icon">☻</div><span>All Spots</span></div>
+        </div>
+
+        <div id="kiss-overlay" onclick="closeKiss()">
+            <div style="font-size:50px;">❤️</div>
+            <div id="kiss-num" class="kiss-count">0</div>
+            <div style="font-weight:bold;">Recharging magic...</div>
+            <div style="font-size:12px; margin-top:20px;">(Stamina +20%)</div>
+        </div>
+
+        <div id="hotel-overlay" onclick="if(event.target == this) closeHotel()">
+            <div class="hotel-modal">
+                <div class="close-btn" onclick="closeHotel()">×</div>
+                <h2 style="margin-bottom: 20px; color: #1a1a1a;">🏠 Accommodation</h2>
+
+                <div class="hotel-card">
+                    <div style="font-size: 11px; color: var(--dawho-gold); font-weight: bold; margin-bottom: 5px;">2/26 (Thu) - Night 1</div>
+                    <div style="font-size: 18px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px;">Ziqiang St. Old House</div>
+                    <div style="font-size: 13px; color: #555; line-height: 1.6;">
+                        📍 <strong>Address:</strong> No. 78, Ziqiang St., North Dist.<br>
+                        🕒 <strong>Check-in:</strong> After 1 PM / <strong>Check-out:</strong> 11 AM<br>
+                        ⚠️ <strong>Note:</strong> Hard to find on Google Maps; host will provide guide 1 day prior.<br>
+                        💬 <strong>Remark:</strong> Contact host via Agoda if needed.
+                    </div>
+                    <a href="https://goo.gl/maps/placeholder1" target="_blank" style="color: var(--primary-green); font-size: 12px; font-weight: bold; text-decoration: none; display: block; margin-top: 10px;">↗ Open Map</a>
+                </div>
+
+                <div class="hotel-card">
+                    <div style="font-size: 11px; color: var(--dawho-gold); font-weight: bold; margin-bottom: 5px;">2/27 (Fri) - Night 2</div>
+                    <div style="font-size: 18px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px;">Autumn Backpackers</div>
+                    <div style="font-size: 13px; color: #555; line-height: 1.6;">
+                        📍 <strong>Address:</strong> No. 7, Ln. 7, Daxin St., West Central Dist.<br>
+                        🕒 <strong>Check-in:</strong> After 3 PM (Check email for instructions)<br>
+                        🚶 <strong>Location:</strong> Near Xiejin Elementary backdoor oden alley.
+                    </div>
+                    <a href="https://goo.gl/maps/placeholder2" target="_blank" style="color: var(--primary-green); font-size: 12px; font-weight: bold; text-decoration: none; display: block; margin-top: 10px;">↗ Open Map</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allData = [
+            {"name": "Nameless Mutton Soup", "time": "05:30-13:00 (Closed Tue)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=6988823270250232013&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Must grab! Michelin recommended, no gamey taste.", "cindy": "⭐⭐⭐⭐⭐ (Hurry, take a pic for me!)", "full": 20},
+            {"name": "Meixian Beef Soup", "time": "24hrs (Closed Mon/Tue)", "addr": "South Dist.", "map": "https://maps.google.com/?cid=2734682962622339755&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Perfect for late night! Our first meal arriving 2/26.", "cindy": "⭐⭐⭐⭐⭐ (This one is amazing)", "full": 20},
+            {"name": "A-Tsai Beef Soup", "time": "11:30-22:00", "addr": "Anping Dist.", "map": "https://maps.google.com/?cid=14531624740468646438&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Loved by locals and tourists alike.", "cindy": "⭐⭐⭐⭐⭐ (Must-eat in Anping)", "full": 20},
+            {"name": "Xia Da Dao Lan Rice Cake", "time": "09:00-19:00 (Closed Wed-Fri)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=3085742664717935776&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Only open on 2/28! Absolute must-try.", "cindy": "⭐⭐⭐⭐⭐ (Finally got to eat it)", "full": 15},
+            {"name": "Nameless Rice Cake", "time": "09:30-15:00 (Closed Sun)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=3482488932888708341&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Alleyway legend. Perfect moisture.", "cindy": "⭐⭐⭐⭐⭐ (Such a vibe)", "full": 15},
+            {"name": "A-Long Sausage & Meat", "time": "10:30-19:00 (Closed Mon)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=17253077583729000409&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ,https://maps.google.com/?cid=17253077583729000409&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Tainan's special 'Black and White' cut.", "cindy": "⭐⭐⭐⭐⭐ (This is an art)", "full": 15},
+            {"name": "A-Feng Milkfish Thick Soup", "time": "07:30-00:00", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=8294065933744534217&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Solid fish chunks in every bite.", "cindy": "⭐⭐⭐⭐ (Right next door)", "full": 15},
+            {"name": "Bite Me Pizza", "time": "11:30-21:30 (Closed Mon/Tue)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=4568156167290177597&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "49 NTD with Student ID! Thin & crispy.", "cindy": "⭐⭐⭐⭐ (Crazy good value)", "full": 15},
+            {"name": "Tsai's Pig Blood Soup", "time": "10:30-18:30 (Closed Mon)", "addr": "East Dist.", "map": "https://www.google.com/maps/search/?api=1&query=蔡家豬血湯", "melon": "So much ingredients, wonder if the boss makes a profit.", "cindy": "⭐⭐⭐⭐ (Way too much food)", "full": 15},
+            {"name": "Iron Bull Breakfast", "time": "14:00-19:00", "addr": "East Dist.", "map": "https://maps.google.com/?cid=5511486227572991761&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "A breakfast shop that opens in the afternoon.", "cindy": "⭐⭐⭐⭐ (Sinful cheese)", "full": 15},
+            {"name": "Danwa Braised Food", "time": "17:00-01:30", "addr": "North Dist.", "map": "https://maps.google.com/?cid=10538179209633656791&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Late-night braised food spot.", "cindy": "⭐⭐⭐⭐ (Best midnight snack)", "full": 15},
+            {"name": "Soy Milk Zong", "time": "21:40-10:30", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=13132803753236278417&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Late night only! Shacha egg pancake is the soul.", "cindy": "⭐⭐⭐⭐ (A true classic)", "full": 15},
+            {"name": "Lu Ji Crystal Dumplings", "time": "08:00-16:30", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=15113525052136485682&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Sells out in seconds! Go right when they open.", "cindy": "⭐⭐⭐⭐⭐ (Skin is so translucent)", "full": 10},
+            {"name": "Lian De Tang Bakery", "time": "08:00-20:00 (Sat til 18:00)", "addr": "North Dist.", "map": "https://maps.app.goo.gl/DJBUgafAVXdprV6fA", "melon": "Limit 2 bags per person. Century-old handmade method.", "cindy": "⭐⭐⭐⭐⭐ (Souvenirs secured)", "full": 10},
+            {"name": "Wanli Crispy Pork", "time": "14:30-18:00 (Closed Sun)", "addr": "South Dist.", "map": "https://maps.google.com/?cid=1498015060232698701&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ,https://maps.google.com/?cid=1498015060232698701&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "God-tier afternoon tea. Crispy pork is a must.", "cindy": "⭐⭐⭐⭐⭐ (Worth the ride here)", "full": 10},
+            {"name": "Xiejin Elem. Oden", "time": "11:00-18:30 (Closed Mon)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=3475368361674548011&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Traditional oden for just 2 NTD a stick.", "cindy": "⭐⭐⭐⭐⭐ (2 NTD is insane)", "full": 10},
+            {"name": "Taiwan Oden (2 NTD)", "time": "10:00-19:00 (Closed Tue/Wed)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=300975792201487936&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Sit on low stools on Fuzhong Street to eat.", "cindy": "⭐⭐⭐ (Great for walking around)", "full": 10},
+            {"name": "Chuchang Korean Chicken", "time": "16:30-22:30", "addr": "East Dist.", "map": "https://maps.google.com/?cid=16898360211044643062&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "4.9 stars near the station. Great for late night.", "cindy": "⭐⭐⭐⭐⭐ (Korean chicken is the best)", "full": 10},
+            {"name": "You Me Him House", "time": "10:00-21:00 (Closed Mon)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=8045718738865438494&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Old-school chilled braised food. Recommend duck wings.", "cindy": "⭐⭐⭐⭐ (Must gnaw on the wings)", "full": 10},
+            {"name": "Wumu Potato Pancake", "time": "After 17:30 (Night Market)", "addr": "Flower Night Market", "map": "https://maps.google.com/?cid=8417478498165500873&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Night market exclusive! Potato pancakes.", "cindy": "⭐⭐⭐⭐ (Night market vibes)", "full": 10},
+            {"name": "Traditional Peanut Pancake", "time": "Afternoons", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=15661721193566532806&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ,https://maps.google.com/?cid=15661721193566532806&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Classic cheap street snack.", "cindy": "⭐⭐⭐ (Pocket change food)", "full": 10},
+            {"name": "Ice Country", "time": "12:00-20:00", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=13397649642501993091&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Must get a number! Winter limited strawberry ice.", "cindy": "⭐⭐⭐⭐⭐ (Strawberry mountain, here I come)", "full": 10},
+            {"name": "Xiaobei A-Song Ice", "time": "14:00-22:00", "addr": "North Dist.", "map": "https://maps.google.com/?cid=13924745127369615997&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "60 NTD strawberry ice! Hidden in Xiaobei Night Market.", "cindy": "⭐⭐⭐⭐⭐ (60 NTD is such a steal)", "full": 10},
+            {"name": "Doufa King", "time": "14:00-19:00", "addr": "East Dist.", "map": "https://maps.google.com/?cid=12395371052428747014&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "20 NTD boba tofu pudding.", "cindy": "⭐⭐⭐⭐⭐ (Where else can you find 20 NTD dessert?)", "full": 10},
+            {"name": "Mr.Z Bakery", "time": "11:00-20:00", "addr": "West Central Dist.",
