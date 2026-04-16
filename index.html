@@ -124,12 +124,12 @@
     <div class="iphone-frame">
         <div class="app-header">
             <div class="logo">SinoPac <span>Foodie</span></div>
-            <button class="user-badge" onclick="showHotel()">CINDY🍰 & MELON🍈 🏠</button>
+            <button class="user-badge" onclick="showHotel()">ERIKA✨ & MELON🍈 🏠</button>
         </div>
 
         <div class="content-area">
             <div class="ctl-dashboard">
-                <div class="ctl-title">CINDY's Current Fullness Level</div>
+                <div class="ctl-title">ERIKA's Current Fullness Level</div>
                 <div style="display:flex; align-items:baseline;">
                     <div id="stomach-val" class="ctl-value">50</div>
                     <div class="ctl-unit">%</div>
@@ -142,7 +142,7 @@
 
             <div style="display:flex; gap:10px; margin-bottom:20px;">
                 <button onclick="triggerKiss()" class="action-btn" style="background: #ff4d4f; color:white;">💋 Recharge Magic</button>
-                <button onclick="flirt()" class="action-btn" style="background: var(--dawho-gold); color:white;">💖 Flirt a little</button>
+                <button onclick="flirt()" class="action-btn" style="background: var(--dawho-gold); color:white;">💖 Flirt (Erika Edition)</button>
             </div>
 
             <div id="dialogue-box"></div>
@@ -196,6 +196,9 @@
     </div>
 
     <script>
+        // ==========================================
+        // 1. 💎 Data Section (Food Itinerary)
+        // ==========================================
         const allData = [
             {"name": "Nameless Mutton Soup", "time": "05:30-13:00 (Closed Tue)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=6988823270250232013&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Must grab! Michelin recommended, no gamey taste.", "cindy": "⭐⭐⭐⭐⭐ (Hurry, take a pic for me!)", "full": 20},
             {"name": "Meixian Beef Soup", "time": "24hrs (Closed Mon/Tue)", "addr": "South Dist.", "map": "https://maps.google.com/?cid=2734682962622339755&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Perfect for late night! Our first meal arriving 2/26.", "cindy": "⭐⭐⭐⭐⭐ (This one is amazing)", "full": 20},
@@ -221,4 +224,116 @@
             {"name": "Ice Country", "time": "12:00-20:00", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=13397649642501993091&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Must get a number! Winter limited strawberry ice.", "cindy": "⭐⭐⭐⭐⭐ (Strawberry mountain, here I come)", "full": 10},
             {"name": "Xiaobei A-Song Ice", "time": "14:00-22:00", "addr": "North Dist.", "map": "https://maps.google.com/?cid=13924745127369615997&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "60 NTD strawberry ice! Hidden in Xiaobei Night Market.", "cindy": "⭐⭐⭐⭐⭐ (60 NTD is such a steal)", "full": 10},
             {"name": "Doufa King", "time": "14:00-19:00", "addr": "East Dist.", "map": "https://maps.google.com/?cid=12395371052428747014&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "20 NTD boba tofu pudding.", "cindy": "⭐⭐⭐⭐⭐ (Where else can you find 20 NTD dessert?)", "full": 10},
-            {"name": "Mr.Z Bakery", "time": "11:00-20:00", "addr": "West Central Dist.",
+            {"name": "Mr.Z Bakery", "time": "11:00-20:00", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=13190751101230769464&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Pineapple bun cream puff specialty store.", "cindy": "⭐⭐⭐⭐ (Tastes like ice cream)", "full": 10},
+            {"name": "Bula Cold Butter Toast", "time": "14:00-19:00", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=14135714860676283086&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "Charcoal-grilled toast with cold butter inside.", "cindy": "⭐⭐⭐⭐ (Very Southeast Asian vibe)", "full": 10},
+            {"name": "Kaohsiung Dairy Tainan", "time": "09:00-19:00 (Closed Sun)", "addr": "South Dist.", "map": "https://maps.google.com/?cid=2690950442146061340&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "The LV of fresh milk.", "cindy": "⭐⭐⭐⭐ (Gotta keep the bottle)", "full": 5},
+            {"name": "Yifa Tofu & Soy Milk", "time": "15:30-22:00 (Closed Wed/Sun)", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=1082121498780722578&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "70-year-old shop. Served in clear plastic bags.", "cindy": "⭐⭐⭐⭐ (Bagged drinks are so retro)", "full": 5},
+            {"name": "Lin Yifeng Winter Melon Tea", "time": "10:00-19:00", "addr": "Anping Dist.", "map": "https://maps.google.com/?cid=364084262162972388&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ", "melon": "The original Anping store.", "cindy": "⭐⭐⭐⭐ (Winter melon with jelly cubes)", "full": 5},
+            {"name": "Yuguang Island", "time": "24hrs", "addr": "Anping Dist.", "map": "https://maps.google.com/?cid=17253077583729000409&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ6", "melon": "Beautiful crescent bay beach and forest trail.", "cindy": "⭐⭐⭐⭐⭐ (The sunset makes me cry)", "full": -20},
+            {"name": "J.O.X Tainan", "time": "14:00-21:00", "addr": "West Central Dist.", "map": "https://maps.google.com/?cid=8294065933744534217&g_mp=Cidnb29nbGUubapzLm5hZXMuMhEuUGxhY2VzLlNlYXJjaFRleHQ9", "melon": "Great boutique shop. Come here to digest!", "cindy": "⭐⭐⭐⭐ (My wallet is crying)", "full": -20}
+        ];
+
+        const missions = {
+            "Day 1": [...allData.slice(0, 2), allData[4]],
+            "Day 2": [allData[5], allData[6]],
+            "Day 3": [allData[2], allData[3], allData[25]],
+            "All Spots": allData
+        };
+
+        let state = { stomach: 50, currentDay: "Day 1" };
+
+        function render() {
+            const list = document.getElementById('mission-list');
+            list.innerHTML = '';
+            const currentList = missions[state.currentDay] || [];
+
+            currentList.forEach(m => {
+                const card = document.createElement('div');
+                card.className = `task-card ${state.stomach < 20 && m.full > 0 ? 'low-stomach' : ''}`;
+                let icon = m.full < 0 ? '🛍️' : (m.full < 10 ? '🥤' : '🍱');
+
+                card.innerHTML = `
+                    <div class="icon-box">${icon}</div>
+                    <div class="task-info">
+                        <div class="task-name">${m.name}</div>
+                        <div class="task-meta">${m.time} | ${m.addr}</div>
+                        <a href="${m.map}" target="_blank" class="map-link">📍 Open Map</a>
+                    </div>
+                    <div style="font-weight:bold; font-size:12px; color:${m.full > 0 ? 'var(--primary-green)' : '#ff4d4f'}">
+                        ${m.full > 0 ? '+' + m.full : m.full}%
+                    </div>
+                `;
+                card.onclick = (e) => { if(e.target.tagName !== 'A') eat(m); };
+                list.appendChild(card);
+            });
+            updateUI();
+        }
+
+        function eat(m) {
+            if (state.stomach + m.full > 100 && m.full > 0) { alert("Too full! Let's go for a walk to digest first!"); return; }
+            state.stomach = Math.max(0, Math.min(100, state.stomach + m.full));
+
+            const box = document.getElementById('dialogue-box');
+            box.style.display = 'block';
+            box.innerHTML = `<div><strong>🍈 Melon: </strong>${m.melon}</div><div style="color:#666; margin-top:4px;"><strong>✨ Erika: </strong>${m.cindy}</div>`;
+            updateUI();
+        }
+
+        function updateUI() {
+            const val = document.getElementById('stomach-val');
+            const bar = document.getElementById('stomach-bar');
+            const tag = document.getElementById('status-tag');
+            val.innerText = state.stomach;
+            bar.style.width = state.stomach + '%';
+            if(state.stomach > 90) {
+                tag.innerText = "⚠️ Stomach exploding, go for a walk!"; tag.style.color = "#ffbb00"; val.style.color = "#ffbb00"; bar.style.background = "#ffbb00";
+            } else if (state.stomach < 20) {
+                tag.innerText = "❌ Low blood sugar, eat something now!"; tag.style.color = "#ff4d4f"; val.style.color = "#ff4d4f"; bar.style.background = "#ff4d4f";
+            } else {
+                tag.innerText = "✅ Feeling good, let's keep eating!"; tag.style.color = "#4ade80"; val.style.color = "var(--primary-green)"; bar.style.background = "var(--primary-green)";
+            }
+        }
+
+        function switchDay(day, el) {
+            state.currentDay = day;
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('day-title').innerText = day;
+            render();
+        }
+
+        function triggerKiss() {
+            const overlay = document.getElementById('kiss-overlay');
+            const num = document.getElementById('kiss-num');
+            overlay.style.display = 'flex';
+            let c = 0;
+            const timer = setInterval(() => {
+                c += 4; num.innerText = c;
+                if(c >= 100) {
+                    clearInterval(timer);
+                    setTimeout(() => { overlay.style.display = 'none'; state.stomach = 70; updateUI(); }, 500);
+                }
+            }, 20);
+        }
+
+        function closeKiss() { document.getElementById('kiss-overlay').style.display = 'none'; }
+
+        function flirt() {
+            const quotes = [
+                "Why is Erika so cute? ✨", 
+                "Eat as much as you want today, I won't judge! 😂", 
+                "I'm officially upgrading this button for Erika! 🍀", 
+                "Next stop: Real Italian food! 🍕"
+            ];
+            document.getElementById('dialogue-box').style.display = 'block';
+            document.getElementById('dialogue-box').innerText = "💌 " + quotes[Math.floor(Math.random() * quotes.length)];
+        }
+
+        function showHotel() { document.getElementById('hotel-overlay').style.display = 'flex'; }
+        function closeHotel() { document.getElementById('hotel-overlay').style.display = 'none'; }
+
+        // Initialize
+        render();
+    </script>
+</body>
+</html>
